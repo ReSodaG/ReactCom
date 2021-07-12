@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tree } from 'antd';
+import { Tree, Input } from 'antd';
 import { EditOutlined } from '@ant-design/icons';
 import './EditTree.css';
 
@@ -49,32 +49,40 @@ let treeData = [
 ];
 
 class EditTree extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+    this.state = {
+      isEditNodeKey: false,
+    };
   }
+
+  // 建立结点树
   createTreeData(treeData) {
     let treeArr = treeData.map((node) => {
-      let title = <span>{node.title}<EditOutlined className="editIcon" /></span>
-        ;
+      let title;
+      if (node.key === this.state.isEditNodeKey)
+        title =
+          <span >
+            <Input placeholder={node.title} />
+          </span>;
+      else
+        title =
+          <span>
+            {node.title}
+            <EditOutlined className="editIcon" onClick={() => this.setState({ isEditNodeKey: node.key })} />
+          </span>;
       if (node.children) {
-        return <TreeNode title={title} key={node.key}>{this.createTreeData(node.children)}</TreeNode>
+        return <TreeNode className="treeNode" title={title} key={node.key}>{this.createTreeData(node.children)}</TreeNode>
+
       }
-      return <TreeNode title={title} key={node.key} />
+      return <TreeNode className="treeNode" title={title} key={node.key} />
     })
     return treeArr;
-  };
-  onSelect(selectedKeys, info) {
-    console.log('selected', selectedKeys, info);
-  };
-
-  onCheck(checkedKeys, info) {
-    console.log('onCheck', checkedKeys, info);
   };
 
   render() {
     return (
-      <Tree
-        defaultExpandAll={true}>
+      <Tree defaultExpandAll={true}>
         {this.createTreeData(treeData)}
       </Tree>
     );
