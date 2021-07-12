@@ -4,7 +4,7 @@ import { EditOutlined } from '@ant-design/icons';
 import './EditTree.css';
 
 const { TreeNode } = Tree;//es6解构赋值 const TreeNode = Tree.TreeNode
-let treeData = [
+let rowtreeData = [
   {
     title: '0-0',
     key: '0-0',
@@ -52,24 +52,30 @@ class EditTree extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      titleCache: '',
       isEditNodeKey: false,
+      rowtreeData: rowtreeData,
     };
   }
-
+  changeNode(title, key) {
+    this.setState({ titleCache: title });
+    console.log(title, key)
+  }
   // 建立结点树
-  createTreeData(treeData) {
-    let treeArr = treeData.map((node) => {
+  createTreeData(data) {
+    let treeArr = data.map((node) => {
       let title;
-      if (node.key === this.state.isEditNodeKey)
+      if (node.key === this.state.isEditNodeKey) {
         title =
           <span >
-            <Input placeholder={node.title} />
+            <Input value={this.state.titleCache} onChange={(e) => this.changeNode(e.target.value, node.key)} />
           </span>;
+      }
       else
         title =
           <span>
             {node.title}
-            <EditOutlined className="editIcon" onClick={() => this.setState({ isEditNodeKey: node.key })} />
+            <EditOutlined className="editIcon" onClick={() => this.setState({ isEditNodeKey: node.key, titleCache: node.title })} />
           </span>;
       if (node.children) {
         return <TreeNode className="treeNode" title={title} key={node.key}>{this.createTreeData(node.children)}</TreeNode>
@@ -83,7 +89,7 @@ class EditTree extends React.Component {
   render() {
     return (
       <Tree defaultExpandAll={true}>
-        {this.createTreeData(treeData)}
+        {this.createTreeData(this.state.rowtreeData)}
       </Tree>
     );
   }
