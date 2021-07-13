@@ -13,7 +13,7 @@ class EditTree extends React.Component {
       isEditNodeKey: false
     };
   }
-  // input显示修改
+  // input显示内容修改
   changeInput(title) {
     this.setState({ titleCache: title });
   }
@@ -53,8 +53,11 @@ class EditTree extends React.Component {
             <EditOutlined className="editIcon" onClick={() => this.enableEdit(node)} />
           </span>;
       if (node.children) {
-        return <TreeNode className="treeNode" title={title} key={node.key}>{this.createTreeData(node.children)}</TreeNode>
-
+        return (
+          <TreeNode className="treeNode" title={title} key={node.key}>
+            {this.createTreeData(node.children)}
+          </TreeNode>
+        );
       }
       return <TreeNode className="treeNode" title={title} key={node.key} />
     })
