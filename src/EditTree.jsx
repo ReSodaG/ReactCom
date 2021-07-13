@@ -4,49 +4,6 @@ import { EditOutlined } from '@ant-design/icons';
 import './EditTree.css';
 
 const { TreeNode } = Tree;//es6解构赋值 const TreeNode = Tree.TreeNode
-let rowtreeData = [
-  {
-    title: '0-0',
-    key: '0-0',
-    children: [
-      {
-        title: '0-0-0',
-        key: '0-0-0',
-        children: [
-          { title: '0-0-0-0', key: '0-0-0-0' },
-          { title: '0-0-0-1', key: '0-0-0-1' },
-          { title: '0-0-0-2', key: '0-0-0-2' },
-        ],
-      },
-      {
-        title: '0-0-1',
-        key: '0-0-1',
-        children: [
-          { title: '0-0-1-0', key: '0-0-1-0' },
-          { title: '0-0-1-1', key: '0-0-1-1' },
-          { title: '0-0-1-2', key: '0-0-1-2' },
-        ],
-      },
-      {
-        title: '0-0-2',
-        key: '0-0-2',
-      },
-    ],
-  },
-  {
-    title: '0-1',
-    key: '0-1',
-    children: [
-      { title: '0-1-0-0', key: '0-1-0-0' },
-      { title: '0-1-0-1', key: '0-1-0-1' },
-      { title: '0-1-0-2', key: '0-1-0-2' },
-    ],
-  },
-  {
-    title: '0-2',
-    key: '0-2',
-  },
-];
 
 class EditTree extends React.Component {
   constructor(props) {
@@ -58,7 +15,6 @@ class EditTree extends React.Component {
   }
   changeInput(title, key) {
     this.setState({ titleCache: title });
-    console.log(title, key)
   }
   changeNode(tree, key) {
     tree.forEach((node) => {
@@ -79,8 +35,8 @@ class EditTree extends React.Component {
           <span >
             <Input value={this.state.titleCache}
               onChange={(e) => this.changeInput(e.target.value, node.key)}
-              onPressEnter={() => this.changeNode(rowtreeData, node.key)}
-              onBlur={() => this.changeNode(rowtreeData, node.key)}
+              onPressEnter={() => this.changeNode(this.props.rowtreeData, node.key)}
+              onBlur={() => this.changeNode(this.props.rowtreeData, node.key)}
             />
           </span>;
       }
@@ -102,7 +58,7 @@ class EditTree extends React.Component {
   render() {
     return (
       <Tree defaultExpandAll={true}>
-        {this.createTreeData(rowtreeData)}
+        {this.createTreeData(this.props.rowtreeData)}
       </Tree>
     );
   }
