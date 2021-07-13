@@ -39,7 +39,9 @@ class EditTree extends React.Component {
       if (node.key === this.state.isEditNodeKey) {
         title =
           <span >
-            <Input value={this.state.titleCache}
+            <Input
+              autoFocus="autoFocus"
+              value={this.state.titleCache}
               onChange={(e) => this.changeInput(e.target.value, node.key)}
               onPressEnter={() => this.changeNodeTitle(this.props.rowtreeData, node.key)}
               onBlur={() => this.changeNodeTitle(this.props.rowtreeData, node.key)}
