@@ -53,13 +53,22 @@ class EditTree extends React.Component {
     super(props);
     this.state = {
       titleCache: '',
-      isEditNodeKey: false,
-      rowtreeData: rowtreeData,
+      isEditNodeKey: false
     };
   }
-  changeNode(title, key) {
+  changeInput(title, key) {
     this.setState({ titleCache: title });
     console.log(title, key)
+  }
+  changeNode(tree, key) {
+    tree.forEach((node) => {
+      if (key === node.key)
+        node.title = this.state.titleCache
+      else
+        if (node.children)
+          this.changeNode(node.children, key)
+    })
+    this.setState({ isEditNodeKey: false })
   }
   // 建立结点树
   createTreeData(data) {
@@ -68,7 +77,11 @@ class EditTree extends React.Component {
       if (node.key === this.state.isEditNodeKey) {
         title =
           <span >
-            <Input value={this.state.titleCache} onChange={(e) => this.changeNode(e.target.value, node.key)} />
+            <Input value={this.state.titleCache}
+              onChange={(e) => this.changeInput(e.target.value, node.key)}
+              onPressEnter={() => this.changeNode(rowtreeData, node.key)}
+              onBlur={() => this.changeNode(rowtreeData, node.key)}
+            />
           </span>;
       }
       else
@@ -89,7 +102,7 @@ class EditTree extends React.Component {
   render() {
     return (
       <Tree defaultExpandAll={true}>
-        {this.createTreeData(this.state.rowtreeData)}
+        {this.createTreeData(rowtreeData)}
       </Tree>
     );
   }
