@@ -3,7 +3,7 @@ import { Tree, Input } from 'antd';
 import { EditOutlined } from '@ant-design/icons';
 import './EditTree.css';
 
-const { TreeNode } = Tree;//es6解构赋值 const TreeNode = Tree.TreeNode
+const { TreeNode } = Tree;
 
 class EditTree extends React.Component {
   constructor(props) {
@@ -13,18 +13,24 @@ class EditTree extends React.Component {
       isEditNodeKey: false
     };
   }
-  changeInput(title, key) {
+  // input显示修改
+  changeInput(title) {
     this.setState({ titleCache: title });
   }
-  changeNode(tree, key) {
+  // 修改结点标题
+  changeNodeTitle(tree, key) {
     tree.forEach((node) => {
       if (key === node.key)
         node.title = this.state.titleCache
       else
         if (node.children)
-          this.changeNode(node.children, key)
+          this.changeNodeTitle(node.children, key)
     })
     this.setState({ isEditNodeKey: false })
+  }
+  // 修改结点
+  enableEdit(node) {
+    this.setState({ isEditNodeKey: node.key, titleCache: node.title })
   }
   // 建立结点树
   createTreeData(data) {
@@ -35,8 +41,8 @@ class EditTree extends React.Component {
           <span >
             <Input value={this.state.titleCache}
               onChange={(e) => this.changeInput(e.target.value, node.key)}
-              onPressEnter={() => this.changeNode(this.props.rowtreeData, node.key)}
-              onBlur={() => this.changeNode(this.props.rowtreeData, node.key)}
+              onPressEnter={() => this.changeNodeTitle(this.props.rowtreeData, node.key)}
+              onBlur={() => this.changeNodeTitle(this.props.rowtreeData, node.key)}
             />
           </span>;
       }
@@ -44,7 +50,7 @@ class EditTree extends React.Component {
         title =
           <span>
             {node.title}
-            <EditOutlined className="editIcon" onClick={() => this.setState({ isEditNodeKey: node.key, titleCache: node.title })} />
+            <EditOutlined className="editIcon" onClick={() => this.enableEdit(node)} />
           </span>;
       if (node.children) {
         return <TreeNode className="treeNode" title={title} key={node.key}>{this.createTreeData(node.children)}</TreeNode>
